@@ -18,12 +18,12 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib import admin
 from django.urls import path
-from .views import predict 
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
-    path('FarmproducepredictionApp/', views.FarmproducepredictionApp, name='FarmproducepredictionApp'),
+    path('FarmproducepredictionApp/', views.predict, name='FarmproducepredictionApp'),
     path('records/', views.db_record, name='records'),
     path('delete/<int:pk>', views.delete, name='delete')
 ]
