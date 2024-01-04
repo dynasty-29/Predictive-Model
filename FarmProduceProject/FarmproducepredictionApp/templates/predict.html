@@ -1,0 +1,24 @@
+{% include 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1 class='text-center mt-3'>Predicted Results</h1>
+    <hr>
+
+    {% if classification_result == 1 %}
+
+        {% with predicted_crop_type="Your_Predicted_Crop_Type" %}
+
+        <h1 class='text-center text-primary'>Result <b>{{ predicted_crop_type }}</b> Plant crop type</h1>
+
+        <h1 class='text-center'><b class='text-danger'>The best crop to plant with these environment conditions is {{ predicted_crop_type }}</b></h1>
+
+        {% endwith %}
+
+    {% endif %}
+
+</div>
+
+{% endblock content %}
