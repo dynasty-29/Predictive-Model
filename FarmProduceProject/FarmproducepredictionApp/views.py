@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 import pandas as pd
 from .models import CropPrediction
+import numpy as np
+from .apps import *
+from rest_framework.views import APIView
+from rest_framework.response import  Response
 
-
-# Create your views here.
 
 def home(request):
     return render(request, 'home.html')
