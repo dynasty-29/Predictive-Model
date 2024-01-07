@@ -13,5 +13,7 @@ class CropPrediction(models.Model):
     ph_level = models.IntegerField()
     classification = models.IntegerField()
 
-    def __str__(self):  # Change __int__ to __str__
-        return str(self.classification)
+    def __int__(self):
+        return self.classification
+
+# Create your models here.

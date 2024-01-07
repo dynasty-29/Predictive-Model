@@ -1,37 +1,39 @@
-import pickle
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+import pandas as pd
+from .models import CropPrediction
 import numpy as np
+from .apps import *
+from rest_framework.views import APIView
+from rest_framework.response import  Response
 
-@api_view(["POST"])
-def predict_croptype(request):
-    try:
-        required_params = ['temperature', 'humidity', 'precipitation', 'wind_speed', 'solar_radiation',
-                           'nitrogen_level', 'phosphorus_level', 'potassium_level', 'ph_level']
+class CropPrediction(APIView):
+    def post(self, request, format=None):
+        model = FarmproducepredictionappConfig.model
+        temperature = request.data['temperature']
+        humidity = request.data['humidity']
+        precipitation = request.data['precipitation']
+        wind_speed = request.data['wind_speed']
+        solar_radiation = request.data['solar_radiation']
+        nitrogen_level = request.data['nitrogen_level']
+        phosphorus_level = request.data['phosphorus_level']
+        potassium_level = request.data['potassium_level']
+        ph_level = request.data['ph_level']
 
-        if all(param in request.data for param in required_params):
-            result = [request.data[param] for param in required_params]
+        lis = []
 
-            model_path = 'ML_models/plant_xgb_model.pkl'
-            classifier = pickle.load(open(model_path, 'rb'))
-            prediction = classifier.predict([result])[0]
-            conf_score = np.max(classifier.predict_proba([result])) * 100
-            predictions = {
-                'error': '0',
-                'message': 'Successful',
-                'prediction': prediction,
-                'confidence_score': conf_score
-            }
-        else:
-            predictions = {
-                'error': '1',
-                'message': 'Invalid Parameters'
-            }
-    except Exception as e:
-        predictions = {
-            'error': '2',
-            "message": str(e)
-        }
+        lis.append(temperature)
+        lis.append(humidity)
+        lis.append(precipitation)
+        lis.append(wind_speed)
+        lis.append(solar_radiation)
+        lis.append(nitrogen_level)
+        lis.append(phosphorus_level)
+        lis.append(potassium_level)
+        lis.append(ph_level)
 
-    return Response(predictions)
+        print(lis)
+
+        classification = model.predict([lis])
+
+        return Response({'classification_result': classification[0]}, status=200)
+
