@@ -6,6 +6,6 @@ from .views import predict_croptype
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('FarmproducepredictionApp.urls')),
-    path('', predict_croptype.as_view(), name = 'prediction ')
+    path('FarmProduceProject/', include('FarmproducepredictionApp.urls')),
+    path('predict/', predict_croptype.as_view(), name='prediction ')
 ]
