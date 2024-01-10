@@ -41,17 +41,26 @@ class CropPrediction(APIView):
         lis.append(potassium_level)
         lis.append(ph_level)
 
-        print(lis)
-
+        
         # Convert categorical features to numeric using LabelEncoder
         lis_encoded = [
             le.transform([value])[0] if isinstance(value, str) else value
             for value in lis
         ]
 
+        # Print information about label encoding
+        print(f"Lis: {lis}")
+        print(f"Lis Encoded: {lis_encoded}")
+        print(f"Label Encoder Classes: {le.classes_}")
+
+        # Predict using the model
         classification = model.predict([lis_encoded])
 
         # Convert the numeric prediction back to the original crop type name
-        prediction_name = le.inverse_transform([classification[0]])[0]
+        prediction_name = le.inverse_transform([classification[0]])
 
-        return Response({"classification_result": prediction_name}, status=200)
+        # Print information about the prediction
+        print(f"Original Numeric Prediction: {classification[0]}")
+        print(f"Original Categorical Prediction: {prediction_name}")
+
+        return Response({"The best crop type to plant with these enviromental factors is": prediction_name[0]}, status=200)
