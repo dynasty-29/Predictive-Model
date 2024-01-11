@@ -81,12 +81,15 @@ class CropPrediction(APIView):
         predicted_crop_type = class_mapping[int(classification[0])]
 
         # Return the prediction result in the response
-        return Response({"The best crop to farm with these condion is": predicted_crop_type}, status=200)
+        return Response(
+            {"The best crop to farm with these conditions is": predicted_crop_type},
+            status=200,
+        )
 
 
 class AnimPrediction(APIView):
     def post(self, request, format=None):
-        # Ensure XGBoost model is an instance of XGBClassifier
+        # Ensure XGBoost model is an instance of XGBRegressor
         if not isinstance(model2, XGBRegressor):
             return Response({"error": "Invalid data"}, status=400)
 
@@ -103,7 +106,7 @@ class AnimPrediction(APIView):
         humidity = request.data["humidity"]
         prev_milk_production = request.data["prev_milk_production"]
 
-        lis = [
+        lis2 = [
             breed,
             health_status,
             lactation_stage,
@@ -119,15 +122,17 @@ class AnimPrediction(APIView):
         ]
 
         # Convert categorical features to numeric using LabelEncoder
-        lis_encoded = [
-            le.transform([value])[0] if isinstance(value, str) else value
-            for value in lis
-        ]
+        # lis_encoded = [
+        #     le.transform([value])[0] if isinstance(value, str) else value
+        #     for value in lis2
+        # ]
 
-        # Predict using the model
-        predicted_milk_production = model2.predict([lis])
+        # Predict using the model2
+        predicted_milk_production = model2.predict([lis2])
 
-        predicted_milk_production_ = class_mapping[int(predicted_milk_production[0])]
+        # predicted_milk_production_ = class_mapping[int(predicted_milk_production[0])]
 
         # Return the prediction result in the response
-        return Response({"The expected milk production is": predicted_milk_production_}, status=200)
+        return Response(
+            {"The expected milk production is": predicted_milk_production}, status=200
+        )

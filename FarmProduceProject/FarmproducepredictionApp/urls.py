@@ -5,5 +5,5 @@ from .views import CropPrediction, AnimPrediction
 
 urlpatterns = [
     path('crop-prediction', CropPrediction.as_view(), name = 'cropprediction '),
-    path('animal-prediction/', AnimPrediction.as_view(), name = 'animprediction')
+    path('animal-prediction/', AnimPrediction.as_view(), name = 'animprediction'),
 ]

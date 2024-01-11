@@ -1,5 +1,5 @@
 from django.apps import AppConfig
-from xgboost import XGBClassifier
+from xgboost import XGBClassifier, XGBRegressor
 from sklearn.preprocessing import LabelEncoder
 import pickle
 
@@ -7,7 +7,7 @@ import pickle
 class FarmproducepredictionappConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "FarmproducepredictionApp"
-    model_path1 = "mL_models/plant_xgb_model"
+    model_path1 = "ml_models/plant_xgb_model"
     model_path2 = "ml_models/animal_xgb_model.pkl"
 
     # Load the plant model
