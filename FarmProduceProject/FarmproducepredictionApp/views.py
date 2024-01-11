@@ -1,15 +1,15 @@
 from django.shortcuts import render
 import pandas as pd
-from .models import CropPrediction
+from .models import CropPrediction, AnimPrediction
 import numpy as np
 from .apps import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from sklearn.preprocessing import LabelEncoder
-from xgboost import XGBClassifier
+from xgboost import XGBClassifier, XGBRegressor
 
 # Assuming FarmproducepredictionappConfig.model is your XGBClassifier instance
-model = FarmproducepredictionappConfig.model
+model1 = FarmproducepredictionappConfig.model1
 
 # Define your class mapping
 class_mapping = {
@@ -48,8 +48,8 @@ le.fit(your_training_data_labels)
 class CropPrediction(APIView):
     def post(self, request, format=None):
         # Ensure XGBoost model is an instance of XGBClassifier
-        if not isinstance(model, XGBClassifier):
-            return Response({"error": "Invalid model type"}, status=400)
+        if not isinstance(model1, XGBClassifier):
+            return Response({"error": "Invalid data"}, status=400)
 
         temperature = request.data["temperature"]
         humidity = request.data["humidity"]
@@ -66,37 +66,68 @@ class CropPrediction(APIView):
             temperature,
             humidity,
             ph_level,
-            precipitation
-            ]
+            precipitation,
+        ]
 
         # Convert categorical features to numeric using LabelEncoder
         lis_encoded = [
             le.transform([value])[0] if isinstance(value, str) else value
             for value in lis
-            ]
-
-        # Inverse transform for categorical features
-        lis_encoded = [
-            le.inverse_transform([value])[0] if isinstance(value, int) else value
-            for value in lis_encoded
-            ]
-
-        # Print information about label encoding
-        print(f"Lis: {lis}")
-        print(f"Lis Encoded: {lis_encoded}")
-        print(f"Label Encoder Classes: {le.classes_}")
+        ]
 
         # Predict using the model
-        classification = model.predict([lis_encoded])
+        classification = model1.predict([lis])
 
-        try:
-            # Convert the numeric prediction back to the original crop type name
-            prediction_name = le.inverse_transform([classification[0]])
-        except ValueError as e:
-            # Handle the case of an unseen label, you can provide a default value or take appropriate action
-            prediction_name = "Unknown Label"
-        print(f"Warning: Unseen label encountered - {e}")
+        predicted_crop_type = class_mapping[int(classification[0])]
 
-        # Print information about the prediction
-        print(f"Original Numeric Prediction: {classification[0]}")
-        print(f"Original Categorical Prediction: {prediction_name}")
+        # Return the prediction result in the response
+        return Response({"The best crop to farm with these condion is": predicted_crop_type}, status=200)
+
+
+class AnimPrediction(APIView):
+    def post(self, request, format=None):
+        # Ensure XGBoost model is an instance of XGBClassifier
+        if not isinstance(model2, XGBRegressor):
+            return Response({"error": "Invalid data"}, status=400)
+
+        breed = request.data["breed"]
+        health_status = request.data["health_status"]
+        lactation_stage = request.data["lactation_stage"]
+        reproductive_status = request.data["reproductive_status"]
+        milking_frequency = request.data["milking_frequency"]
+        age = request.data["age"]
+        nutrition_protein = request.data["nutrition_protein"]
+        nutrition_carbohydrates = request.data["nutrition_carbohydrates"]
+        nutrition_minerals = request.data["nutrition_minerals"]
+        temperature = request.data["temperature"]
+        humidity = request.data["humidity"]
+        prev_milk_production = request.data["prev_milk_production"]
+
+        lis = [
+            breed,
+            health_status,
+            lactation_stage,
+            reproductive_status,
+            milking_frequency,
+            age,
+            nutrition_protein,
+            temperature,
+            humidity,
+            nutrition_carbohydrates,
+            nutrition_minerals,
+            prev_milk_production,
+        ]
+
+        # Convert categorical features to numeric using LabelEncoder
+        lis_encoded = [
+            le.transform([value])[0] if isinstance(value, str) else value
+            for value in lis
+        ]
+
+        # Predict using the model
+        predicted_milk_production = model2.predict([lis])
+
+        predicted_milk_production_ = class_mapping[int(predicted_milk_production[0])]
+
+        # Return the prediction result in the response
+        return Response({"The expected milk production is": predicted_milk_production_}, status=200)

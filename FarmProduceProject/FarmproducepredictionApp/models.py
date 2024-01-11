@@ -1,6 +1,8 @@
+from typing import Any
 from django.db import models
-# Create your models here.
 
+
+# crop prediction model
 class CropPrediction(models.Model):
     temperature = models.IntegerField()
     humidity = models.IntegerField()
@@ -9,9 +11,27 @@ class CropPrediction(models.Model):
     phosphorus_level = models.IntegerField()
     potassium_level = models.IntegerField()
     ph_level = models.IntegerField()
-    crop_type = models.IntegerField()
+    classification = models.CharField(max_length=50)
 
     def __int__(self):
-        return self.crop_type
+        return self.classification
 
-# Create your models here.
+
+# animal produce model
+class AnimPrediction(models.Model):
+    breed = models.CharField(max_length=100)
+    health_status = models.CharField(max_length=100)
+    lactation_stage = models.CharField(max_length=100)
+    reproductive_status = models.CharField(max_length=100)
+    milking_frequency = models.CharField(max_length=100)
+    age = models.IntegerField()
+    nutrition_protein = models.IntegerField()
+    nutrition_carbohydrates = models.IntegerField()
+    nutrition_minerals = models.IntegerField()
+    temperature = models.IntegerField()
+    humidity = models.IntegerField()
+    prev_milk_production = models.IntegerField()
+    predicted_milk_production = models.IntegerField()
+    
+    def __init__(self):
+        return self.predicted_milk_production
