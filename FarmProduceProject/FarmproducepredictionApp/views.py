@@ -60,26 +60,26 @@ class CropPrediction(APIView):
         ph_level = request.data["ph_level"]
 
         lis = [
-            temperature,
-            humidity,
-            precipitation,
             nitrogen_level,
             phosphorus_level,
             potassium_level,
+            temperature,
+            humidity,
             ph_level,
-        ]
+            precipitation
+            ]
 
         # Convert categorical features to numeric using LabelEncoder
         lis_encoded = [
             le.transform([value])[0] if isinstance(value, str) else value
             for value in lis
-        ]
+            ]
 
         # Inverse transform for categorical features
         lis_encoded = [
             le.inverse_transform([value])[0] if isinstance(value, int) else value
             for value in lis_encoded
-        ]
+            ]
 
         # Print information about label encoding
         print(f"Lis: {lis}")
@@ -90,10 +90,10 @@ class CropPrediction(APIView):
         classification = model.predict([lis_encoded])
 
         try:
-        # Convert the numeric prediction back to the original crop type name
+            # Convert the numeric prediction back to the original crop type name
             prediction_name = le.inverse_transform([classification[0]])
         except ValueError as e:
-        # Handle the case of an unseen label, you can provide a default value or take appropriate action
+            # Handle the case of an unseen label, you can provide a default value or take appropriate action
             prediction_name = "Unknown Label"
         print(f"Warning: Unseen label encountered - {e}")
 
