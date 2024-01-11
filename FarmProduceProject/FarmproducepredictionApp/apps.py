@@ -10,7 +10,7 @@ class FarmproducepredictionappConfig(AppConfig):
 
     # Load the model with use_label_encoder set to False
     model = pickle.load(open(model_path, "rb"))
-    model.use_label_encoder = False  # Add this line
+    model.use_label_encoder = True # Add this line
 
     label_encoder = LabelEncoder()
 
