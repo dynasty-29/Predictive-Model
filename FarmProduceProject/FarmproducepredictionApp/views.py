@@ -42,11 +42,19 @@ class CropPrediction(APIView):
         lis.append(ph_level)
 
         
+       
         # Convert categorical features to numeric using LabelEncoder
         lis_encoded = [
             le.transform([value])[0] if isinstance(value, str) else value
             for value in lis
         ]
+
+        # Inverse transform for categorical features
+        lis_encoded = [
+            le.inverse_transform([value])[0] if isinstance(value, int) else value
+            for value in lis_encoded
+        ]
+
 
         # Print information about label encoding
         print(f"Lis: {lis}")
@@ -54,10 +62,14 @@ class CropPrediction(APIView):
         print(f"Label Encoder Classes: {le.classes_}")
 
         # Predict using the model
+        # Predict using the model
         classification = model.predict([lis_encoded])
 
+
+        # Convert the numeric prediction back to the original crop type name
         # Convert the numeric prediction back to the original crop type name
         prediction_name = le.inverse_transform([classification[0]])
+
 
         # Print information about the prediction
         print(f"Original Numeric Prediction: {classification[0]}")
