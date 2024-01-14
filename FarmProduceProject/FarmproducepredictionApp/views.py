@@ -10,7 +10,7 @@ from xgboost import XGBClassifier, XGBRegressor
 
 # Assuming FarmproducepredictionappConfig.model is your XGBClassifier instance
 model1 = FarmproducepredictionappConfig.model1
-
+model2 = FarmproducepredictionappConfig.model2
 # Define your class mapping
 class_mapping = {
     0: "apple",
@@ -77,12 +77,15 @@ class CropPrediction(APIView):
 
         # Predict using the model
         classification = model1.predict([lis])
-
-        predicted_crop_type = class_mapping[int(classification[0])]
+        print(classification)
+        crops = []
+        for i in classification:
+            predicted_crop_type = class_mapping[int(i)]
+            crops.append(predicted_crop_type)
 
         # Return the prediction result in the response
         return Response(
-            {"The best crop to farm with these conditions is": predicted_crop_type},
+            {"The best crop to farm with these conditions is": crops},
             status=200,
         )
 
