@@ -6,7 +6,8 @@ from .apps import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from sklearn.preprocessing import LabelEncoder
-from xgboost import XGBClassifier, XGBRegressor
+from xgboost import XGBClassifier
+from sklearn.linear_model import LinearRegression
 
 # Assuming FarmproducepredictionappConfig.model is your XGBClassifier instance
 model1 = FarmproducepredictionappConfig.model1
@@ -130,10 +131,8 @@ class AnimPrediction(APIView):
         except ValueError:
             # Handle unseen category, for example, assign a default value
             breed_encoded = default_encoded_value
-     
+
         milking_frequency_encoded = le.transform([milking_frequency])[0]
-      
-            
 
         health_status_encoded = le.transform([health_status])[0]
         lactation_stage_encoded = le.transform([lactation_stage])[0]
