@@ -19,12 +19,6 @@ class CropPrediction(models.Model):
 
 # animal produce model
 class AnimPrediction(models.Model):
-    breed = models.CharField(max_length=100)
-    health_status = models.CharField(max_length=100)
-    lactation_stage = models.CharField(max_length=100)
-    reproductive_status = models.CharField(max_length=100)
-    milking_frequency = models.CharField(max_length=100)
-    age = models.IntegerField()
     nutrition_protein = models.IntegerField()
     nutrition_carbohydrates = models.IntegerField()
     nutrition_minerals = models.IntegerField()

@@ -101,16 +101,10 @@ default_encoded_value = 5
 class AnimPrediction(APIView):
     def post(self, request, format=None):
         # Ensure XGBoost model is an instance of XGBRegressor
-        if not isinstance(model2, XGBRegressor):
+        if not isinstance(model2, LinearRegression):
             return Response({"error": "Invalid data"}, status=400)
 
         # Extract input parameters from the request
-        breed = request.data["breed"]
-        health_status = request.data["health_status"]
-        lactation_stage = request.data["lactation_stage"]
-        reproductive_status = request.data["reproductive_status"]
-        milking_frequency = request.data["milking_frequency"]
-        age = float(request.data["age"])  # Ensure numeric data type
         nutrition_protein = float(
             request.data["nutrition_protein"]
         )  # Ensure numeric data type
@@ -126,25 +120,7 @@ class AnimPrediction(APIView):
             request.data["prev_milk_production"]
         )  # Ensure numeric data type
 
-        try:
-            breed_encoded = le.transform([breed])[0]
-        except ValueError:
-            # Handle unseen category, for example, assign a default value
-            breed_encoded = default_encoded_value
-
-        milking_frequency_encoded = le.transform([milking_frequency])[0]
-
-        health_status_encoded = le.transform([health_status])[0]
-        lactation_stage_encoded = le.transform([lactation_stage])[0]
-        reproductive_status_encoded = le.transform([reproductive_status])[0]
-
         lis2 = [
-            breed_encoded,
-            health_status_encoded,
-            lactation_stage_encoded,
-            reproductive_status_encoded,
-            milking_frequency_encoded,
-            age,
             nutrition_protein,
             nutrition_carbohydrates,
             nutrition_minerals,

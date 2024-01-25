@@ -8,7 +8,7 @@ class FarmproducepredictionappConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "FarmproducepredictionApp"
     model_path1 = "ml_models/plant_xgb_model"
-    model_path2 = "ml_models/animal_model"
+    model_path2 = "ml_models/animal_model.pkl"
 
     # Load the plant model
     model1 = pickle.load(open(model_path1, "rb"))
